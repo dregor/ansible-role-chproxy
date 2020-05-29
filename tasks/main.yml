@@ -1,0 +1,40 @@
+- name: create user
+  user:
+    name: chproxy
+    system: yes
+
+- name: create directories
+  file: 
+    state: directory
+    path: "{{ item }}"
+    owner: "{{ chproxy_user }}"
+    group: "{{ chproxy_user }}"
+  with_items:
+    - "{{ chproxy_path }}"
+    - "{{ chproxy_conf_path }}"
+
+- name: copy config
+  template:
+    src: config.yml
+    owner: "{{ chproxy_user }}"
+    group: "{{ chproxy_user }}"
+    dest: "{{ chproxy_conf_path }}/chproxy.yml"
+
+- name: download chproxy
+  unarchive:
+    remote_src: yes
+    owner: "{{ chproxy_user }}"
+    group: "{{ chproxy_user }}"
+    src: "{{ chproxy_url }}"
+    dest: "{{ chproxy_path }}/"
+
+- name: make systemd file
+  template:
+    src: chproxy.service
+    dest: /etc/systemd/system/chproxy.service
+
+- name: check chproxy started and enabled
+  systemd:
+    name: chproxy
+    state: started
+    enabled: yes

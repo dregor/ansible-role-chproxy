@@ -1,0 +1,18 @@
+[Unit]
+Description=clickhouse proxy
+After=network.target
+
+[Service]
+Type=simple
+User={{ chproxy_user }}
+Group={{ chproxy_user }}
+Restart=on-failure
+RestartSec=5
+ExecStart={{ chproxy_path }}/chproxy -config {{ chproxy_conf_path }}/chproxy.yml
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=chproxy
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

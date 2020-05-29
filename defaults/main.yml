@@ -1,0 +1,5 @@
+chproxy_path: /opt/chproxy
+chproxy_conf_path: '{{chproxy_path}}'
+chproxy_user: chproxy
+chproxy_version: '1.14.0'
+chproxy_url: 'https://github.com/Vertamedia/chproxy/releases/download/v{{ chproxy_version }}/chproxy-linux-amd64-v{{ chproxy_version }}.tar.gz'
